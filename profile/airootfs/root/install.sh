@@ -284,7 +284,7 @@ pacman -S --noconfirm snapper snap-pac
 umount /.snapshots
 rm -r /.snapshots
 
-snapper -c root create-config /
+snapper --no-dbus -c root create-config /
 
 # snapper create-config creates a .snapshots subvolume inside /
 # Remove it — we use our own @snapshots subvolume instead
@@ -293,17 +293,17 @@ mkdir /.snapshots
 mount -a
 
 # Allow the user to manage snapshots without root
-snapper -c root set-config "ALLOW_USERS=${USERNAME}"
+snapper --no-dbus -c root set-config "ALLOW_USERS=${USERNAME}"
 
 # Configure timeline snapshots
-snapper -c root set-config "TIMELINE_CREATE=yes"
-snapper -c root set-config "TIMELINE_CLEANUP=yes"
-snapper -c root set-config "TIMELINE_MIN_AGE=1800"
-snapper -c root set-config "TIMELINE_LIMIT_HOURLY=5"
-snapper -c root set-config "TIMELINE_LIMIT_DAILY=7"
-snapper -c root set-config "TIMELINE_LIMIT_WEEKLY=0"
-snapper -c root set-config "TIMELINE_LIMIT_MONTHLY=0"
-snapper -c root set-config "TIMELINE_LIMIT_YEARLY=0"
+snapper --no-dbus -c root set-config "TIMELINE_CREATE=yes"
+snapper --no-dbus -c root set-config "TIMELINE_CLEANUP=yes"
+snapper --no-dbus -c root set-config "TIMELINE_MIN_AGE=1800"
+snapper --no-dbus -c root set-config "TIMELINE_LIMIT_HOURLY=5"
+snapper --no-dbus -c root set-config "TIMELINE_LIMIT_DAILY=7"
+snapper --no-dbus -c root set-config "TIMELINE_LIMIT_WEEKLY=0"
+snapper --no-dbus -c root set-config "TIMELINE_LIMIT_MONTHLY=0"
+snapper --no-dbus -c root set-config "TIMELINE_LIMIT_YEARLY=0"
 
 # Enable snapper timers
 systemctl enable snapper-timeline.timer
