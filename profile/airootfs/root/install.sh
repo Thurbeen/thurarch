@@ -80,7 +80,7 @@ swapon /mnt/swap/swapfile
 echo "[5/12] Installing base system (pacstrap)..."
 pacstrap -K /mnt \
     base base-devel linux linux-headers linux-firmware \
-    btrfs-progs amd-ucode networkmanager vim git \
+    btrfs-progs amd-ucode networkmanager vim git zsh \
     acpi_call-dkms
 
 # -------------------------------------------------------------------
@@ -116,6 +116,9 @@ echo "LANG=${LOCALE}" > /etc/locale.conf
 # Keymap
 echo "KEYMAP=${KEYMAP}" > /etc/vconsole.conf
 
+# X11 keyboard layout (US International AltGr)
+localectl set-x11-keymap us "" altgr-intl
+
 # mkinitcpio — amdgpu early KMS, remove kms hook for NVIDIA
 sed -i 's/^MODULES=.*/MODULES=(amdgpu)/' /etc/mkinitcpio.conf
 sed -i 's/ kms//' /etc/mkinitcpio.conf
@@ -143,9 +146,12 @@ EOF
 echo "root:${ROOT_PASSWORD}" | chpasswd
 
 # Create user
-useradd -m -G wheel -s /bin/bash "${USERNAME}"
+useradd -m -G wheel -s /bin/zsh "${USERNAME}"
 echo "${USERNAME}:${USER_PASSWORD}" | chpasswd
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
+
+# Install Oh My Zsh for the user
+sudo -u ${USERNAME} sh -c 'RUNZSH=no CHSH=no sh -c "\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
 
 # Enable services
 systemctl enable NetworkManager
