@@ -1,0 +1,14 @@
+[Unit]
+Description=Thurarch Unattended Installer
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=/root/install.sh
+
+[Service]
+Type=oneshot
+ExecStart=/root/install.sh
+StandardOutput=journal+console
+StandardError=journal+console
+
+[Install]
+WantedBy=multi-user.target
