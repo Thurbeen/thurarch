@@ -81,7 +81,7 @@ echo "[5/12] Installing base system (pacstrap)..."
 pacstrap -K /mnt \
     base base-devel linux linux-headers linux-firmware \
     btrfs-progs amd-ucode networkmanager vim git zsh \
-    acpi_call-dkms
+    acpi_call-dkms rust power-profiles-daemon
 
 # -------------------------------------------------------------------
 # 6. Generate fstab
@@ -148,7 +148,7 @@ echo "root:${ROOT_PASSWORD}" | chpasswd
 # Create user
 useradd -m -G wheel -s /bin/zsh "${USERNAME}"
 echo "${USERNAME}:${USER_PASSWORD}" | chpasswd
-sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
+sed -i 's/^# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
 
 # Install Oh My Zsh for the user
 sudo -u ${USERNAME} sh -c 'RUNZSH=no CHSH=no sh -c "\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
@@ -238,11 +238,11 @@ arch-chroot /mnt /bin/bash -e <<CHROOT
 # Install paru as the regular user (makepkg cannot run as root)
 sudo -u ${USERNAME} bash -e <<'PARUEOF'
 cd /tmp
-git clone https://aur.archlinux.org/paru-bin.git
-cd paru-bin
+git clone https://aur.archlinux.org/paru.git
+cd paru
 makepkg -si --noconfirm
 cd /tmp
-rm -rf paru-bin
+rm -rf paru
 PARUEOF
 
 # Install ASUS packages via paru
