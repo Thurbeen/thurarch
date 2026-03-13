@@ -59,6 +59,10 @@ sed -i 's/^# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: A
 # Install Oh My Zsh for the user
 sudo -u "${USERNAME}" sh -c 'RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
 
+# Deploy custom .zshrc
+cp /root/dotfiles/.zshrc "/home/${USERNAME}/.zshrc"
+chown "${USERNAME}:${USERNAME}" "/home/${USERNAME}/.zshrc"
+
 # Enable services
 systemctl enable NetworkManager
 systemctl enable systemd-timesyncd

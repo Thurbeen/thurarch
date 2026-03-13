@@ -88,6 +88,7 @@ genfstab -Lp /mnt >> /mnt/etc/fstab
 
 # Copy chroot scripts, config, and themes into the new system
 cp -r /root/chroot /mnt/root/chroot
+cp -r /root/dotfiles /mnt/root/dotfiles
 cp /root/install.conf /mnt/root/install.conf
 cp -r /root/themes /mnt/root/themes
 mkdir -p /mnt/usr/share/backgrounds
@@ -159,7 +160,7 @@ fi
 # -------------------------------------------------------------------
 echo "[12/12] Cleaning up..."
 
-rm -rf /mnt/root/chroot /mnt/root/themes
+rm -rf /mnt/root/chroot /mnt/root/themes /mnt/root/dotfiles
 
 swapoff /mnt/swap/swapfile 2>/dev/null || true
 fuser -km /mnt 2>/dev/null || true
