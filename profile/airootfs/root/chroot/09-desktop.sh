@@ -3,9 +3,25 @@ set -euo pipefail
 source /root/install.conf
 
 pacman -S --noconfirm \
-    plasma-desktop sddm sddm-kcm \
+    plasma-desktop sddm sddm-kcm kwallet-pam \
     firefox bitwarden ghostty \
     ttf-jetbrains-mono noto-fonts noto-fonts-emoji ttf-liberation
+
+# --- Install Bitwarden extension and pin to Firefox toolbar ---
+mkdir -p /usr/lib/firefox/distribution
+cat > /usr/lib/firefox/distribution/policies.json <<'EOF'
+{
+  "policies": {
+    "ExtensionSettings": {
+      "{446900e4-71c2-419f-a6a7-df9c091e268b}": {
+        "installation_mode": "normal_installed",
+        "install_url": "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi",
+        "default_area": "navbar"
+      }
+    }
+  }
+}
+EOF
 
 # --- Breeze Dark: global theme & color scheme ---
 mkdir -p /etc/skel/.config/kdedefaults
@@ -48,3 +64,16 @@ Current=breeze
 EOF
 
 systemctl enable sddm
+
+# --- KWallet PAM auto-unlock ---
+cat > /etc/pam.d/sddm <<'EOF'
+auth       include    system-login
+auth       optional   pam_kwallet5.so
+
+account    include    system-login
+
+password   include    system-login
+
+session    include    system-login
+session    optional   pam_kwallet5.so auto_start
+EOF
