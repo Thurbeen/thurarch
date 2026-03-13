@@ -188,43 +188,28 @@ mkinitcpio -P
 CHROOT
 
 # -------------------------------------------------------------------
-# 9. XFCE + LightDM
+# 9. KDE Plasma + SDDM
 # -------------------------------------------------------------------
-echo "[9/12] Installing XFCE desktop..."
+echo "[9/12] Installing KDE Plasma desktop..."
 
 arch-chroot /mnt /bin/bash -e <<CHROOT
 
 pacman -S --noconfirm \
-    xorg-server xfce4 xfce4-goodies \
-    lightdm lightdm-gtk-greeter \
+    plasma-desktop sddm \
     firefox bitwarden ghostty \
     ttf-jetbrains-mono noto-fonts noto-fonts-emoji ttf-liberation
 
-# Remove xfce4-terminal — ghostty replaces it
-pacman -Rns --noconfirm xfce4-terminal 2>/dev/null || true
-
-# Set ghostty as the default terminal emulator (system-wide)
-mkdir -p /etc/xdg/xfce4
-cat > /etc/xdg/xfce4/helpers.rc <<EOF
-TerminalEmulator=custom-TerminalEmulator
-EOF
-
-mkdir -p /usr/share/xfce4/helpers
-cat > /usr/share/xfce4/helpers/custom-TerminalEmulator.desktop <<EOF
+# Set custom wallpaper on first login (self-deleting autostart)
+mkdir -p /etc/skel/.config/autostart
+cat > /etc/skel/.config/autostart/set-wallpaper.desktop <<EOF
 [Desktop Entry]
-NoDisplay=true
-Version=1.0
-Encoding=UTF-8
-Type=X-XFCE-Helper
-X-XFCE-Binaries=ghostty
-X-XFCE-Category=TerminalEmulator
-X-XFCE-Commands=/usr/bin/ghostty
-X-XFCE-CommandsWithParameter=/usr/bin/ghostty -e "%s"
-Name=Ghostty
-Icon=com.mitchellh.ghostty
+Type=Application
+Name=Set Thurarch Wallpaper
+Exec=sh -c 'plasma-apply-wallpaperimage /usr/share/backgrounds/thurarch-wallpaper.png && rm ~/.config/autostart/set-wallpaper.desktop'
+X-KDE-autostart-phase=2
 EOF
 
-systemctl enable lightdm
+systemctl enable sddm
 
 CHROOT
 
