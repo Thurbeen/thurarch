@@ -4,7 +4,7 @@ source /root/install.conf
 
 pacman -S --noconfirm \
     plasma-desktop sddm sddm-kcm kwallet-pam \
-    firefox bitwarden ghostty \
+    dolphin firefox bitwarden ghostty \
     ttf-jetbrains-mono noto-fonts noto-fonts-emoji ttf-liberation
 
 # --- Install Bitwarden extension and pin to Firefox toolbar ---
