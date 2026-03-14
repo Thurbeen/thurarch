@@ -1,0 +1,17 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "magicletur"
+            }
+        ],
+        "Description": "Dark global theme with teal/amber accents and deep navy backgrounds, inspired by a geometric llama",
+        "Id": "org.thurarch.llama.desktop",
+        "License": "LGPL",
+        "Name": "Thurarch Llama",
+        "Version": "1.0.0",
+        "Website": ""
+    },
+    "X-Plasma-APIVersion": "2"
+}

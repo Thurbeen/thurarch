@@ -86,11 +86,16 @@ pacstrap -K /mnt \
 echo "[6/12] Generating fstab..."
 genfstab -Lp /mnt >> /mnt/etc/fstab
 
-# Copy chroot scripts and config into the new system
+# Copy chroot scripts, config, and themes into the new system
 cp -r /root/chroot /mnt/root/chroot
 cp /root/install.conf /mnt/root/install.conf
+cp -r /root/themes /mnt/root/themes
 mkdir -p /mnt/usr/share/backgrounds
 cp /usr/share/backgrounds/thurarch-wallpaper.png /mnt/usr/share/backgrounds/
+cp -r /usr/share/color-schemes /mnt/usr/share/color-schemes
+cp -r /usr/share/plasma /mnt/usr/share/plasma
+cp -r /usr/share/wallpapers /mnt/usr/share/wallpapers
+cp -r /usr/share/sddm /mnt/usr/share/sddm
 
 # -------------------------------------------------------------------
 # 7. System configuration (arch-chroot)
@@ -154,7 +159,7 @@ fi
 # -------------------------------------------------------------------
 echo "[12/12] Cleaning up..."
 
-rm -rf /mnt/root/chroot
+rm -rf /mnt/root/chroot /mnt/root/themes
 
 swapoff /mnt/swap/swapfile 2>/dev/null || true
 fuser -km /mnt 2>/dev/null || true

@@ -17,29 +17,36 @@ cat > /usr/lib/firefox/distribution/policies.json <<'EOF'
         "installation_mode": "normal_installed",
         "install_url": "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi",
         "default_area": "navbar"
+      },
+      "thurarch-llama-theme@magicletur": {
+        "installation_mode": "normal_installed",
+        "install_url": "https://addons.mozilla.org/firefox/downloads/latest/thurarch-llama/latest.xpi"
       }
     }
   }
 }
 EOF
 
-# --- Breeze Dark: global theme & color scheme ---
+# --- Thurarch Llama: global theme & color scheme ---
 mkdir -p /etc/skel/.config/kdedefaults
 
 cat > /etc/skel/.config/kdeglobals <<'EOF'
 [General]
-ColorScheme=BreezeDark
+ColorScheme=ThurarchLlama
 
 [KDE]
-LookAndFeelPackage=org.kde.breezedark.desktop
+LookAndFeelPackage=org.thurarch.llama.desktop
+
+[Icons]
+Theme=breeze-dark
 EOF
 
 cp /etc/skel/.config/kdeglobals /etc/skel/.config/kdedefaults/kdeglobals
 
-# --- Breeze Dark: Plasma shell theme (panels, widgets) ---
+# --- Thurarch Llama: Plasma shell theme (panels, widgets) ---
 cat > /etc/skel/.config/plasmarc <<'EOF'
 [Theme]
-name=breeze-dark
+name=thurarch-llama
 EOF
 
 # --- Wallpaper (applied on first login via plasma-apply-wallpaperimage) ---
@@ -50,6 +57,25 @@ Type=Application
 Name=Set Thurarch Wallpaper
 Exec=sh -c 'plasma-apply-wallpaperimage /usr/share/backgrounds/thurarch-wallpaper.png && rm ~/.config/autostart/set-wallpaper.desktop'
 X-KDE-autostart-phase=2
+EOF
+
+# --- Ghostty theme ---
+mkdir -p /etc/skel/.config/ghostty/themes
+cp /root/themes/ThurarchLlama.ghostty /etc/skel/.config/ghostty/themes/ThurarchLlama
+cat > /etc/skel/.config/ghostty/config <<'EOF'
+theme = ThurarchLlama
+EOF
+
+# --- Zed theme & settings ---
+mkdir -p /etc/skel/.config/zed/themes
+cp /root/themes/ThurarchLlama.json /etc/skel/.config/zed/themes/ThurarchLlama.json
+cat > /etc/skel/.config/zed/settings.json <<'EOF'
+{
+  "theme": {
+    "mode": "dark",
+    "dark": "Thurarch Llama"
+  }
+}
 EOF
 
 # --- Set Zed as default text editor via MIME types ---
@@ -76,11 +102,17 @@ EOF
 cp -rT /etc/skel/.config "/home/${USERNAME}/.config"
 chown -R "${USERNAME}:${USERNAME}" "/home/${USERNAME}/.config"
 
-# --- SDDM: use Breeze theme (matches Breeze Dark desktop) ---
+# --- SDDM: use Breeze theme with Thurarch Llama wallpaper ---
 mkdir -p /etc/sddm.conf.d
 cat > /etc/sddm.conf.d/theme.conf <<'EOF'
 [Theme]
 Current=breeze
+EOF
+
+cat > /usr/share/sddm/themes/breeze/theme.conf.user <<'EOF'
+[General]
+background=thurarch-llama-wallpaper.png
+type=image
 EOF
 
 systemctl enable sddm

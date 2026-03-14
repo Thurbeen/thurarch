@@ -1,0 +1,60 @@
+{
+  "manifest_version": 2,
+  "name": "Thurarch Llama",
+  "version": "1.0",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "thurarch-llama-theme@magicletur"
+    }
+  },
+  "description": "Dark Firefox theme with teal/cyan accents, amber highlights, and deep navy backgrounds — inspired by a geometric low-poly llama.",
+  "theme": {
+    "colors": {
+      "frame": "#0a1420",
+      "frame_inactive": "#0c121c",
+      "tab_background_text": "#919ba5",
+      "tab_loading": "#00b4be",
+      "tab_line": "#00b4be",
+      "tab_text": "#f0f0f0",
+      "tab_selected": "#0c121c",
+
+      "toolbar": "#0c121c",
+      "toolbar_text": "#f0f0f0",
+      "toolbar_field": "#121a26",
+      "toolbar_field_text": "#f0f0f0",
+      "toolbar_field_border": "#182230",
+      "toolbar_field_focus": "#121a26",
+      "toolbar_field_text_focus": "#f0f0f0",
+      "toolbar_field_border_focus": "#00b4be",
+      "toolbar_field_highlight": "#00b4be",
+      "toolbar_field_highlight_text": "#ffffff",
+      "toolbar_top_separator": "transparent",
+      "toolbar_bottom_separator": "#182230",
+      "toolbar_vertical_separator": "#182230",
+
+      "bookmark_text": "#f0f0f0",
+
+      "button_background_hover": "#182230",
+      "button_background_active": "#00b4be30",
+
+      "icons": "#919ba5",
+      "icons_attention": "#e69b23",
+
+      "ntp_background": "#000000",
+      "ntp_card_background": "#0c121c",
+      "ntp_text": "#f0f0f0",
+
+      "popup": "#0c121c",
+      "popup_text": "#f0f0f0",
+      "popup_border": "#182230",
+      "popup_highlight": "#00b4be",
+      "popup_highlight_text": "#ffffff",
+
+      "sidebar": "#0a1420",
+      "sidebar_text": "#f0f0f0",
+      "sidebar_border": "#182230",
+      "sidebar_highlight": "#00b4be",
+      "sidebar_highlight_text": "#ffffff"
+    }
+  }
+}

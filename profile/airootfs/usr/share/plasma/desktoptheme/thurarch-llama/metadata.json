@@ -1,0 +1,16 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "magicletur"
+            }
+        ],
+        "Category": "",
+        "Description": "Dark Plasma style with teal/amber accents inspired by a geometric llama",
+        "Id": "thurarch-llama",
+        "License": "LGPL",
+        "Name": "Thurarch Llama",
+        "Version": "1.0.0"
+    },
+    "X-Plasma-API": "5.0"
+}
