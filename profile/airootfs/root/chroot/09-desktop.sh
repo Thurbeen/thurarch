@@ -4,7 +4,7 @@ source /root/install.conf
 
 pacman -S --noconfirm \
     plasma-desktop sddm sddm-kcm kwallet-pam \
-    dolphin firefox bitwarden ghostty \
+    dolphin firefox bitwarden ghostty zed \
     ttf-jetbrains-mono noto-fonts noto-fonts-emoji ttf-liberation
 
 # --- Install Bitwarden extension and pin to Firefox toolbar ---
@@ -50,6 +50,26 @@ Type=Application
 Name=Set Thurarch Wallpaper
 Exec=sh -c 'plasma-apply-wallpaperimage /usr/share/backgrounds/thurarch-wallpaper.png && rm ~/.config/autostart/set-wallpaper.desktop'
 X-KDE-autostart-phase=2
+EOF
+
+# --- Set Zed as default text editor via MIME types ---
+cat > /etc/skel/.config/mimeapps.list <<'EOF'
+[Default Applications]
+text/plain=dev.zed.Zed.desktop
+text/x-c=dev.zed.Zed.desktop
+text/x-c++=dev.zed.Zed.desktop
+text/x-python=dev.zed.Zed.desktop
+text/x-shellscript=dev.zed.Zed.desktop
+text/x-java=dev.zed.Zed.desktop
+text/x-rust=dev.zed.Zed.desktop
+text/html=dev.zed.Zed.desktop
+text/css=dev.zed.Zed.desktop
+text/javascript=dev.zed.Zed.desktop
+text/markdown=dev.zed.Zed.desktop
+text/xml=dev.zed.Zed.desktop
+application/json=dev.zed.Zed.desktop
+application/x-yaml=dev.zed.Zed.desktop
+application/toml=dev.zed.Zed.desktop
 EOF
 
 # --- Copy config to existing user (created in 07-configure.sh before this script) ---
