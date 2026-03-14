@@ -3,7 +3,7 @@ set -euo pipefail
 source /root/install.conf
 
 pacman -S --noconfirm \
-    plasma-desktop sddm sddm-kcm kwallet-pam \
+    plasma-desktop plasma-nm bluedevil bluez bluez-utils sddm sddm-kcm kwallet-pam \
     dolphin firefox bitwarden ghostty zed \
     ttf-jetbrains-mono noto-fonts noto-fonts-emoji ttf-liberation
 
@@ -62,8 +62,10 @@ EOF
 # --- Ghostty theme ---
 mkdir -p /etc/skel/.config/ghostty/themes
 cp /root/themes/ThurarchLlama.ghostty /etc/skel/.config/ghostty/themes/ThurarchLlama
+cp /root/themes/ghostty-tabs.css /etc/skel/.config/ghostty/ghostty-tabs.css
 cat > /etc/skel/.config/ghostty/config <<'EOF'
 theme = ThurarchLlama
+gtk-custom-css = ghostty-tabs.css
 EOF
 
 # --- Zed theme & settings ---
@@ -116,6 +118,7 @@ type=image
 EOF
 
 systemctl enable sddm
+systemctl enable bluetooth
 
 # --- KWallet PAM auto-unlock ---
 cat > /etc/pam.d/sddm <<'EOF'
