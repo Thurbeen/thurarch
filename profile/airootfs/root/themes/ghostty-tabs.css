@@ -1,0 +1,21 @@
+/* Thurarch Llama — Ghostty tab bar styling */
+
+tabbar tabbox {
+  background-color: #0a1420;
+}
+
+tabbar tabbox tab {
+  color: #919ba5;
+  background-color: #0a1420;
+}
+
+tabbar tabbox tab:selected {
+  color: #f0f0f0;
+  background-color: #0c121c;
+  box-shadow: inset 0 -2px 0 #00b4be;
+}
+
+tabbar tabbox tab:hover:not(:selected) {
+  color: #f0f0f0;
+  background-color: #182230;
+}

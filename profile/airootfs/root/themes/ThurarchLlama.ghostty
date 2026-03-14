@@ -8,6 +8,9 @@ cursor-text = #000000
 selection-background = #00b4be
 selection-foreground = #000000
 
+# Window chrome (tab bar)
+window-theme = ghostty
+
 # Normal colors (0-7)
 palette = 0=#0f1114
 palette = 1=#d24637
