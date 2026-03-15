@@ -39,8 +39,8 @@ QEMU_ARGS=(
     -bios "${OVMF}"
     -drive file="${VM_DISK}",if=none,id=nvme0,format=qcow2
     -device nvme,serial=deadbeef,drive=nvme0
-    -vga virtio
-    -display gtk
+    -device virtio-vga-gl
+    -display gtk,gl=on
 )
 
 if [[ "${MODE}" == "install" ]]; then
@@ -71,6 +71,6 @@ if [[ "${MODE}" == "install" ]]; then
         -bios "${OVMF}" \
         -drive file="${VM_DISK}",if=none,id=nvme0,format=qcow2 \
         -device nvme,serial=deadbeef,drive=nvme0 \
-        -vga virtio \
-        -display gtk
+        -device virtio-vga-gl \
+        -display gtk,gl=on
 fi
