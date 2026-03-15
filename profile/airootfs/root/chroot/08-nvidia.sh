@@ -20,7 +20,7 @@ pacman -Syu --noconfirm
 
 # Install NVIDIA packages
 pacman -S --noconfirm \
-    nvidia-open-dkms nvidia-utils lib32-nvidia-utils \
+    nvidia-open nvidia-utils lib32-nvidia-utils \
     nvidia-settings nvidia-prime
 
 # NVIDIA modprobe options

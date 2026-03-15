@@ -78,7 +78,7 @@ echo "[5/12] Installing base system (pacstrap)..."
 pacstrap -K /mnt \
     base base-devel linux linux-headers linux-firmware \
     btrfs-progs amd-ucode networkmanager vim git zsh \
-    acpi_call-dkms power-profiles-daemon openssh
+    acpi_call power-profiles-daemon openssh
 
 # -------------------------------------------------------------------
 # 6. Generate fstab
