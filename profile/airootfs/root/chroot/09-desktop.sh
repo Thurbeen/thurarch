@@ -101,9 +101,31 @@ application/x-yaml=dev.zed.Zed.desktop
 application/toml=dev.zed.Zed.desktop
 EOF
 
+# --- KDE shortcut: Meta+Up to maximize window ---
+cat > /etc/skel/.config/kglobalshortcutsrc <<'EOF'
+[kwin]
+Window Maximize=Meta+Up\t,Meta+PgUp,Maximize Window
+EOF
+
+# --- Git config ---
+cat > /etc/skel/.gitconfig <<'EOF'
+[user]
+	email = magicletur@protonmail.com
+	name = letur
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGuvFW1oLxzgwx8ZgC9vQAukGPiIESqARG9Ildk40tQU
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
+[core]
+	editor = vim
+EOF
+
 # --- Copy config to existing user (created in 07-configure.sh before this script) ---
 cp -rT /etc/skel/.config "/home/${USERNAME}/.config"
+cp /etc/skel/.gitconfig "/home/${USERNAME}/.gitconfig"
 chown -R "${USERNAME}:${USERNAME}" "/home/${USERNAME}/.config"
+chown "${USERNAME}:${USERNAME}" "/home/${USERNAME}/.gitconfig"
 
 # --- SDDM: use Breeze theme with Thurarch Llama wallpaper ---
 mkdir -p /etc/sddm.conf.d
