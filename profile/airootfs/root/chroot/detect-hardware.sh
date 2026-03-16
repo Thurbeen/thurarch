@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # detect-hardware.sh — Sourced by install scripts to set hardware environment variables.
 # Sets: CPU_VENDOR, UCODE_PKG, GPU_MODE, IS_ASUS, HOSTNAME (fallback)
+# shellcheck disable=SC2034  # Variables are used by sourcing scripts
 
 # CPU detection
 if grep -q "GenuineIntel" /proc/cpuinfo; then
