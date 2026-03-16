@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source /root/install.conf
+source /root/chroot/detect-hardware.sh
 
 # Enable multilib
 sed -i '/^#\[multilib\]/,/^#Include/ s/^#//' /etc/pacman.conf
@@ -21,13 +23,13 @@ pacman -Syu --noconfirm
 # Install NVIDIA packages
 pacman -S --noconfirm \
     nvidia-open nvidia-utils lib32-nvidia-utils \
-    nvidia-settings nvidia-prime
+    nvidia-settings $( [[ "$GPU_MODE" == "hybrid" ]] && echo nvidia-prime )
 
 # NVIDIA modprobe options
 mkdir -p /etc/modprobe.d
 cat > /etc/modprobe.d/nvidia.conf <<EOF
 options nvidia_drm modeset=1
-options nvidia NVreg_DynamicPowerManagement=0x02
+options nvidia NVreg_DynamicPowerManagement=$( [[ "$GPU_MODE" == "hybrid" ]] && echo "0x02" || echo "0x00" )
 EOF
 
 # Rebuild initramfs with NVIDIA

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Thurarch — Unattended Arch Linux Installer for ASUS ROG Zephyrus G14 (GA401IV)
+# Thurarch — Unattended Arch Linux Installer
 set -euo pipefail
 
 trap 'echo ""; echo "*** INSTALLATION FAILED — check: journalctl -u thurarch-install.service ***"; umount -Rl /mnt 2>/dev/null; exec 1>&2; sleep infinity' ERR
@@ -13,6 +13,7 @@ echo ""
 # 0. Source configuration
 # -------------------------------------------------------------------
 source /root/install.conf
+source /root/chroot/detect-hardware.sh
 
 DISK="${TARGET_DISK}"
 PART1="${DISK}p1"
@@ -77,8 +78,8 @@ swapon /mnt/swap/swapfile
 echo "[5/12] Installing base system (pacstrap)..."
 pacstrap -K /mnt \
     base base-devel linux linux-headers linux-firmware \
-    btrfs-progs amd-ucode networkmanager vim git zsh \
-    acpi_call power-profiles-daemon openssh
+    btrfs-progs "${UCODE_PKG}" networkmanager vim git zsh \
+    power-profiles-daemon openssh $( $IS_ASUS && echo acpi_call )
 
 # -------------------------------------------------------------------
 # 6. Generate fstab
@@ -117,10 +118,10 @@ echo "[9/12] Installing KDE Plasma desktop..."
 arch-chroot /mnt /bin/bash /root/chroot/09-desktop.sh
 
 # -------------------------------------------------------------------
-# 10. Install paru + ASUS tools (from Chaotic-AUR)
+# 10. Install paru + vendor tools (from Chaotic-AUR)
 # -------------------------------------------------------------------
-echo "[10/12] Installing paru and ASUS tools..."
-arch-chroot /mnt /bin/bash /root/chroot/10-asus.sh
+echo "[10/12] Installing paru and vendor tools..."
+arch-chroot /mnt /bin/bash /root/chroot/10-vendor.sh
 
 # -------------------------------------------------------------------
 # 11. Snapper + snap-pac (btrfs snapshots)

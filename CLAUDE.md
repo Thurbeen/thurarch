@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Thurarch is an unattended Arch Linux installer ISO builder for the ASUS ROG Zephyrus G14 (GA401IV). It boots from USB and automatically installs a fully configured Arch Linux system with KDE Plasma, NVIDIA GPU support, and a custom "Thurarch Llama" dark theme (teal/cyan accents).
+Thurarch is a universal unattended Arch Linux installer ISO builder. It boots from USB and automatically installs a fully configured Arch Linux system with KDE Plasma, NVIDIA GPU support, and a custom "Thurarch Llama" dark theme (teal/cyan accents). Hardware is auto-detected at install time: CPU microcode (Intel/AMD), GPU mode (dedicated/hybrid), and vendor-specific tools (e.g., ASUS asusctl).
 
 ## Build & Test Commands
 
@@ -39,10 +39,11 @@ Executed sequentially inside the new system:
 
 | Script | Purpose |
 |---|---|
+| `detect-hardware.sh` | Sourced helper — sets CPU_VENDOR, UCODE_PKG, GPU_MODE, IS_ASUS, HOSTNAME |
 | `07-configure.sh` | Hostname, locale, user creation, oh-my-zsh, NetworkManager |
 | `08-nvidia.sh` | NVIDIA open-dkms drivers, Chaotic-AUR repo setup |
 | `09-desktop.sh` | KDE Plasma, SDDM, apps (Firefox, Ghostty, Zed, Bitwarden), full Thurarch Llama theme application |
-| `10-asus.sh` | paru AUR helper, asusctl, supergfxctl for hardware control |
+| `10-vendor.sh` | paru AUR helper, conditional ASUS tools (asusctl, supergfxctl) |
 | `11-snapper.sh` | Btrfs snapshot management with snapper + snap-pac |
 
 ### Configuration
@@ -57,6 +58,6 @@ The "Thurarch Llama" theme is applied across KDE (color scheme + desktop theme +
 
 - **Filesystem**: btrfs with zstd compression, SSD-optimized mount options, async discard
 - **Boot**: systemd-boot (not GRUB)
-- **GPU**: NVIDIA open-dkms + nvidia-prime for hybrid GPU switching
+- **GPU**: NVIDIA open-dkms; nvidia-prime only installed for hybrid GPU setups (auto-detected)
 - **QEMU test VM**: KVM with virtio-vga-gl for GPU acceleration (needed for Ghostty rendering), OVMF EFI firmware, NVMe virtual disk
 - **WiFi**: Optional iwd profiles generated at build time by `build.sh`

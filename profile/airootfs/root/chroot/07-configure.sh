@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 source /root/install.conf
+source /root/chroot/detect-hardware.sh
 
 # Hostname
 echo "${HOSTNAME}" > /etc/hostname
@@ -25,8 +26,14 @@ echo "KEYMAP=${KEYMAP}" > /etc/vconsole.conf
 # X11 keyboard layout (US International AltGr)
 localectl set-x11-keymap us "" altgr-intl
 
-# mkinitcpio — amdgpu early KMS, remove kms hook for NVIDIA
-sed -i 's/^MODULES=.*/MODULES=(amdgpu)/' /etc/mkinitcpio.conf
+# mkinitcpio — early KMS for iGPU (hybrid only), remove kms hook for NVIDIA
+if [[ "$GPU_MODE" == "hybrid" && "$CPU_VENDOR" == "amd" ]]; then
+    sed -i 's/^MODULES=.*/MODULES=(amdgpu)/' /etc/mkinitcpio.conf
+elif [[ "$GPU_MODE" == "hybrid" && "$CPU_VENDOR" == "intel" ]]; then
+    sed -i 's/^MODULES=.*/MODULES=(i915)/' /etc/mkinitcpio.conf
+else
+    sed -i 's/^MODULES=.*/MODULES=()/' /etc/mkinitcpio.conf
+fi
 sed -i 's/ kms//' /etc/mkinitcpio.conf
 mkinitcpio -P
 
@@ -43,7 +50,7 @@ EOF
 cat > /boot/loader/entries/arch.conf <<EOF
 title   Arch Linux
 linux   /vmlinuz-linux
-initrd  /amd-ucode.img
+initrd  /${UCODE_PKG}.img
 initrd  /initramfs-linux.img
 options root=LABEL=ROOTFS rootflags=subvol=@ rw quiet loglevel=3
 EOF
