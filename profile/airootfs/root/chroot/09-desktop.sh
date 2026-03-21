@@ -4,6 +4,7 @@ source /root/install.conf
 
 pacman -S --noconfirm \
     plasma-desktop plasma-nm bluedevil bluez bluez-utils sddm sddm-kcm kwallet-pam \
+    kscreen \
     dolphin firefox bitwarden ghostty zed \
     ttf-jetbrains-mono noto-fonts noto-fonts-emoji ttf-liberation \
     pipewire pipewire-pulse pipewire-alsa wireplumber plasma-pa
