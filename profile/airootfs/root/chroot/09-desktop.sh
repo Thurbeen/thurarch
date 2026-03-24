@@ -3,8 +3,11 @@ set -euo pipefail
 source /root/install.conf
 
 pacman -S --noconfirm \
-    plasma-desktop plasma-nm bluedevil bluez bluez-utils sddm sddm-kcm kwallet-pam \
-    kscreen \
+    plasma-desktop plasma-workspace kwin breeze breeze-gtk \
+    plasma-nm bluedevil bluez bluez-utils sddm sddm-kcm kwallet-pam \
+    kscreen systemsettings powerdevil polkit-kde-agent \
+    xdg-desktop-portal xdg-desktop-portal-kde plasma-integration kde-gtk-config \
+    xorg-xwayland \
     dolphin firefox bitwarden ghostty zed \
     ttf-jetbrains-mono noto-fonts noto-fonts-emoji ttf-liberation \
     pipewire pipewire-pulse pipewire-alsa wireplumber plasma-pa

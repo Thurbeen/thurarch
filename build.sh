@@ -47,12 +47,9 @@ fi
 cp -r "${PROFILE_DIR}/airootfs/"* "${WORKPROFILE}/airootfs/"
 
 # Register install script permissions in profiledef.sh (archiso uses this for squashfs)
-sed -i '/^file_permissions=(/a\  ["/root/install.sh"]="0:0:755"\n  ["/root/install.conf"]="0:0:644"\n  ["/root/chroot/07-configure.sh"]="0:0:755"\n  ["/root/chroot/08-nvidia.sh"]="0:0:755"\n  ["/root/chroot/09-desktop.sh"]="0:0:755"\n  ["/root/chroot/10-asus.sh"]="0:0:755"\n  ["/root/chroot/11-snapper.sh"]="0:0:755"\n  ["/usr/local/bin/dp-hotplug"]="0:0:755"' "${WORKPROFILE}/profiledef.sh"
+sed -i '/^file_permissions=(/a\  ["/root/install.sh"]="0:0:755"\n  ["/root/install.conf"]="0:0:644"\n  ["/root/chroot/detect-hardware.sh"]="0:0:755"\n  ["/root/chroot/07-configure.sh"]="0:0:755"\n  ["/root/chroot/08-nvidia.sh"]="0:0:755"\n  ["/root/chroot/09-desktop.sh"]="0:0:755"\n  ["/root/chroot/10-vendor.sh"]="0:0:755"\n  ["/root/chroot/11-snapper.sh"]="0:0:755"\n  ["/usr/local/bin/dp-hotplug"]="0:0:755"' "${WORKPROFILE}/profiledef.sh"
 
-# Enable the installer service via symlink
-mkdir -p "${WORKPROFILE}/airootfs/etc/systemd/system/multi-user.target.wants"
-ln -sf /etc/systemd/system/thurarch-install.service \
-    "${WORKPROFILE}/airootfs/etc/systemd/system/multi-user.target.wants/thurarch-install.service"
+# Installer is manual — user runs /root/install.sh after booting the ISO
 
 # -------------------------------------------------------------------
 # Generate iwd WiFi profile if WIFI_SSID is set
