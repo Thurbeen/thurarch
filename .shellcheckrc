@@ -1,0 +1,5 @@
+# Sourced files use absolute paths (/root/...) that don't exist at lint time
+disable=SC1091
+
+# Variables set via sourced config files (install.conf, detect-hardware.sh)
+disable=SC2154

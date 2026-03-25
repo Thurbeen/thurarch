@@ -31,6 +31,7 @@ case "${MODE}" in
         ;;
 esac
 
+# shellcheck disable=SC2054  # Commas are QEMU syntax, not array separators
 QEMU_ARGS=(
     -enable-kvm
     -m 4G
