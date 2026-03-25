@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Force KDE Plasma (Wayland) to reconfigure outputs on DisplayPort hotplug.
+# NVIDIA + DP monitors drop the link when powered off; KWin may not pick up
+# the reconnection without a nudge.
+
+sleep 2
+
+for session_path in /run/user/*/; do
+    uid="${session_path#/run/user/}"
+    uid="${uid%/}"
+
+    # Only target graphical user sessions (uid >= 1000)
+    [[ "$uid" -ge 1000 ]] || continue
+    [[ -S "${session_path}bus" ]] || continue
+
+    su - "$(id -nu "$uid")" -c "
+        export XDG_RUNTIME_DIR=${session_path}
+        export DBUS_SESSION_BUS_ADDRESS=unix:path=${session_path}bus
+        kscreen-doctor output.DP-3.enable 2>/dev/null
+    " &
+done
+
+wait

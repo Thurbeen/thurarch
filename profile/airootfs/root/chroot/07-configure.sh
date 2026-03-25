@@ -32,7 +32,7 @@ if [[ "$GPU_MODE" == "hybrid" && "$CPU_VENDOR" == "amd" ]]; then
 elif [[ "$GPU_MODE" == "hybrid" && "$CPU_VENDOR" == "intel" ]]; then
     sed -i 's/^MODULES=.*/MODULES=(i915)/' /etc/mkinitcpio.conf
 else
-    sed -i 's/^MODULES=.*/MODULES=()/' /etc/mkinitcpio.conf
+    sed -i 's/^MODULES=.*/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
 fi
 sed -i 's/ kms//' /etc/mkinitcpio.conf
 mkinitcpio -P
