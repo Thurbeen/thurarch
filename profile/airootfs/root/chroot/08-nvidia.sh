@@ -21,9 +21,10 @@ CHAOTICEOF
 pacman -Syu --noconfirm
 
 # Install NVIDIA packages
+# shellcheck disable=SC2046  # Intentionally unquoted: expands to zero args when false
 pacman -S --noconfirm \
     nvidia-open nvidia-utils lib32-nvidia-utils \
-    nvidia-settings $( [[ "$GPU_MODE" == "hybrid" ]] && echo nvidia-prime )
+    nvidia-settings $([[ "$GPU_MODE" == "hybrid" ]] && echo "nvidia-prime")
 
 # NVIDIA modprobe options
 mkdir -p /etc/modprobe.d
