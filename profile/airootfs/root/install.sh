@@ -79,7 +79,7 @@ echo "[5/12] Installing base system (pacstrap)..."
 # shellcheck disable=SC2046  # Intentionally unquoted: expands to zero args when false
 pacstrap -K /mnt \
     base base-devel linux linux-headers linux-firmware \
-    btrfs-progs "${UCODE_PKG}" networkmanager vim git zsh \
+    btrfs-progs dosfstools "${UCODE_PKG}" networkmanager vim git zsh \
     power-profiles-daemon openssh $($IS_ASUS && echo "acpi_call")
 
 # -------------------------------------------------------------------
