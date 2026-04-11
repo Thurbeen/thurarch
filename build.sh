@@ -59,6 +59,11 @@ source "${PROFILE_DIR}/airootfs/root/install.conf"
 CONF_WORK="${WORKPROFILE}/airootfs/root/install.conf"
 
 echo ""
+echo "--- Hostname ---"
+read -rp "Hostname [${HOSTNAME}]: " INPUT_HOSTNAME
+HOSTNAME="${INPUT_HOSTNAME:-${HOSTNAME}}"
+
+echo ""
 echo "--- Passwords ---"
 read -rsp "Enter password for user '${USERNAME}': " USER_PASSWORD
 echo
@@ -84,13 +89,20 @@ if [[ -n "${WIFI_SSID}" ]]; then
   echo
 fi
 
-# Inject secrets into the working-copy install.conf (baked into ISO)
-{
-  printf 'USER_PASSWORD="%s"\n' "${USER_PASSWORD}"
-  printf 'ROOT_PASSWORD="%s"\n' "${ROOT_PASSWORD}"
-  printf 'WIFI_SSID="%s"\n' "${WIFI_SSID}"
-  printf 'WIFI_PASSWORD="%s"\n' "${WIFI_PASSWORD}"
-} >>"${CONF_WORK}"
+# Write the complete install.conf for the ISO (secrets + overrides)
+cat > "${CONF_WORK}" <<EOF
+TARGET_DISK="${TARGET_DISK}"
+HOSTNAME="${HOSTNAME}"
+USERNAME="${USERNAME}"
+TIMEZONE="${TIMEZONE}"
+LOCALE="${LOCALE}"
+KEYMAP="${KEYMAP}"
+SWAP_SIZE="${SWAP_SIZE}"
+EOF
+printf "USER_PASSWORD='%s'\n" "${USER_PASSWORD//\'/\'\\\'\'}" >> "${CONF_WORK}"
+printf "ROOT_PASSWORD='%s'\n" "${ROOT_PASSWORD//\'/\'\\\'\'}" >> "${CONF_WORK}"
+printf "WIFI_SSID='%s'\n" "${WIFI_SSID//\'/\'\\\'\'}" >> "${CONF_WORK}"
+printf "WIFI_PASSWORD='%s'\n" "${WIFI_PASSWORD//\'/\'\\\'\'}" >> "${CONF_WORK}"
 
 # -------------------------------------------------------------------
 # Generate iwd WiFi profile if WIFI_SSID is set
