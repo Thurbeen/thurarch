@@ -52,16 +52,50 @@ sed -i '/^file_permissions=(/a\  ["/root/install.sh"]="0:0:755"\n  ["/root/insta
 # Installer is manual — user runs /root/install.sh after booting the ISO
 
 # -------------------------------------------------------------------
-# Generate iwd WiFi profile if WIFI_SSID is set
+# Collect secrets (interactive prompts)
 # -------------------------------------------------------------------
 source "${PROFILE_DIR}/airootfs/root/install.conf"
 
-if [[ "${ROOT_PASSWORD}" == "changeme" || "${USER_PASSWORD}" == "changeme" ]]; then
-    echo "Error: passwords in install.conf are still set to 'changeme' — update them before building."
+CONF_WORK="${WORKPROFILE}/airootfs/root/install.conf"
+
+echo ""
+echo "--- Passwords ---"
+read -rsp "Enter password for user '${USERNAME}': " USER_PASSWORD
+echo
+if [[ -z "${USER_PASSWORD}" ]]; then
+    echo "Error: user password cannot be empty."
     exit 1
 fi
 
-if [[ -n "${WIFI_SSID:-}" ]]; then
+read -rsp "Enter root password: " ROOT_PASSWORD
+echo
+if [[ -z "${ROOT_PASSWORD}" ]]; then
+    echo "Error: root password cannot be empty."
+    exit 1
+fi
+
+echo ""
+echo "--- WiFi (optional) ---"
+read -rp "WiFi SSID (leave empty for Ethernet): " WIFI_SSID
+WIFI_SSID="${WIFI_SSID:-}"
+WIFI_PASSWORD=""
+if [[ -n "${WIFI_SSID}" ]]; then
+    read -rsp "WiFi password for '${WIFI_SSID}': " WIFI_PASSWORD
+    echo
+fi
+
+# Inject secrets into the working-copy install.conf (baked into ISO)
+{
+    printf 'USER_PASSWORD="%s"\n' "${USER_PASSWORD}"
+    printf 'ROOT_PASSWORD="%s"\n' "${ROOT_PASSWORD}"
+    printf 'WIFI_SSID="%s"\n' "${WIFI_SSID}"
+    printf 'WIFI_PASSWORD="%s"\n' "${WIFI_PASSWORD}"
+} >> "${CONF_WORK}"
+
+# -------------------------------------------------------------------
+# Generate iwd WiFi profile if WIFI_SSID is set
+# -------------------------------------------------------------------
+if [[ -n "${WIFI_SSID}" ]]; then
     echo "Generating iwd WiFi profile for '${WIFI_SSID}'..."
     IWD_DIR="${WORKPROFILE}/airootfs/var/lib/iwd"
     mkdir -p "${IWD_DIR}"

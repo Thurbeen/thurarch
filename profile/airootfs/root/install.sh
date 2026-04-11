@@ -162,7 +162,7 @@ fi
 # -------------------------------------------------------------------
 echo "[12/12] Cleaning up..."
 
-rm -rf /mnt/root/chroot /mnt/root/themes /mnt/root/dotfiles
+rm -rf /mnt/root/chroot /mnt/root/themes /mnt/root/dotfiles /mnt/root/install.conf
 
 swapoff /mnt/swap/swapfile 2>/dev/null || true
 fuser -km /mnt 2>/dev/null || true
