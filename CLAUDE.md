@@ -10,7 +10,7 @@ Thurarch is a universal unattended Arch Linux installer ISO builder. It boots fr
 
 ```bash
 # Build the ISO (requires root and archiso package)
-sudo ./build.sh          # Output: out/vanilla-arch-*.iso
+sudo ./build.sh          # Prompts for passwords + WiFi, outputs out/vanilla-arch-*.iso
 
 # Test in QEMU VM
 ./test.sh                # Boot ISO + install to virtual disk
@@ -48,7 +48,9 @@ Executed sequentially inside the new system:
 
 ### Configuration
 
-**`profile/airootfs/root/install.conf`** — single config file sourced by install.sh. Contains target disk, hostname, username, passwords, timezone, swap size, and optional WiFi credentials.
+**`profile/airootfs/root/install.conf`** — machine config (disk, hostname, username, timezone, swap). Contains no secrets.
+
+**Secrets** (passwords, WiFi) are collected interactively by `build.sh` at build time and injected into the ISO's copy of install.conf. They are cleaned up from the installed system after chroot scripts complete.
 
 ### Theme system
 
