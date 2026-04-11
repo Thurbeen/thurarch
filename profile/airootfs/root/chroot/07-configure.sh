@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -euxo pipefail
 source /root/install.conf
 source /root/chroot/detect-hardware.sh
 
@@ -26,16 +26,16 @@ echo "KEYMAP=${KEYMAP}" >/etc/vconsole.conf
 # X11 keyboard layout (US International AltGr)
 localectl set-x11-keymap us "" altgr-intl
 
-# mkinitcpio — early KMS for iGPU (hybrid only), remove kms hook for NVIDIA
+# mkinitcpio — early KMS for iGPU (hybrid only), NVIDIA modules for dedicated
 if [[ "$GPU_MODE" == "hybrid" && "$CPU_VENDOR" == "amd" ]]; then
   sed -i 's/^MODULES=.*/MODULES=(amdgpu)/' /etc/mkinitcpio.conf
 elif [[ "$GPU_MODE" == "hybrid" && "$CPU_VENDOR" == "intel" ]]; then
   sed -i 's/^MODULES=.*/MODULES=(i915)/' /etc/mkinitcpio.conf
-else
+elif lspci | grep -qi nvidia; then
   sed -i 's/^MODULES=.*/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
 fi
 sed -i 's/ kms//' /etc/mkinitcpio.conf
-mkinitcpio -P
+# mkinitcpio -P deferred to 08-nvidia.sh (after NVIDIA drivers are installed)
 
 # systemd-boot
 bootctl --esp-path=/boot install
@@ -52,7 +52,7 @@ title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /${UCODE_PKG}.img
 initrd  /initramfs-linux.img
-options root=LABEL=ROOTFS rootflags=subvol=@ rw quiet loglevel=3
+options root=UUID=${ROOT_UUID} rootflags=subvol=@ rw quiet loglevel=3
 EOF
 
 # Root password

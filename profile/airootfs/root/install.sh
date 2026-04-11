@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # Thurarch — Unattended Arch Linux Installer
-set -euo pipefail
+set -euxo pipefail
 
-trap 'echo ""; echo "*** INSTALLATION FAILED — check: journalctl -u thurarch-install.service ***"; umount -Rl /mnt 2>/dev/null; exec 1>&2; sleep infinity' ERR
+trap 'echo ""; echo "*** INSTALLATION FAILED at line $LINENO — check: /tmp/thurarch-install.log ***"; umount -Rl /mnt 2>/dev/null; exec 1>&2; sleep infinity' ERR
+
+exec > >(tee /tmp/thurarch-install.log) 2>&1
 
 echo "=========================================="
 echo "  Thurarch — Unattended Installer"
@@ -66,7 +68,7 @@ mkdir -p /mnt/{home,.snapshots,swap,boot}
 mount -o "subvol=@home,${BTRFS_OPTS}" "${PART2}" /mnt/home
 mount -o "subvol=@snapshots,${BTRFS_OPTS}" "${PART2}" /mnt/.snapshots
 mount -o "subvol=@swap,nodatacow" "${PART2}" /mnt/swap
-mount "${PART1}" /mnt/boot
+mount -o umask=0077 "${PART1}" /mnt/boot
 
 # Create swapfile
 btrfs filesystem mkswapfile --size "${SWAP_SIZE}" /mnt/swap/swapfile
@@ -76,17 +78,26 @@ swapon /mnt/swap/swapfile
 # 5. Pacstrap — install base system
 # -------------------------------------------------------------------
 echo "[5/12] Installing base system (pacstrap)..."
+# Install base system without the kernel first, so we can create
+# vconsole.conf before mkinitcpio runs during kernel installation.
 # shellcheck disable=SC2046  # Intentionally unquoted: expands to zero args when false
 pacstrap -K /mnt \
-  base base-devel linux linux-headers linux-firmware \
+  base base-devel linux-firmware \
   btrfs-progs "${UCODE_PKG}" networkmanager vim git zsh \
   power-profiles-daemon openssh $($IS_ASUS && echo "acpi_call")
+
+# Create vconsole.conf before installing the kernel — mkinitcpio's
+# sd-vconsole hook requires this file to exist.
+echo "KEYMAP=${KEYMAP}" > /mnt/etc/vconsole.conf
+
+# Now install the kernel (triggers mkinitcpio)
+pacstrap /mnt linux linux-headers
 
 # -------------------------------------------------------------------
 # 6. Generate fstab
 # -------------------------------------------------------------------
 echo "[6/12] Generating fstab..."
-genfstab -Lp /mnt >>/mnt/etc/fstab
+genfstab -Up /mnt >>/mnt/etc/fstab
 
 # Copy chroot scripts, config, and themes into the new system
 cp -r /root/chroot /mnt/root/chroot
@@ -104,7 +115,8 @@ cp -r /usr/share/sddm /mnt/usr/share/sddm
 # 7. System configuration (arch-chroot)
 # -------------------------------------------------------------------
 echo "[7/12] Configuring system..."
-arch-chroot /mnt /bin/bash /root/chroot/07-configure.sh
+ROOT_UUID=$(blkid -s UUID -o value "${PART2}")
+arch-chroot /mnt /bin/bash -c "export ROOT_UUID='${ROOT_UUID}'; /root/chroot/07-configure.sh"
 
 # -------------------------------------------------------------------
 # 8. NVIDIA setup

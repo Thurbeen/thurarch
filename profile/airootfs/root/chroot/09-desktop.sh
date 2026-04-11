@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -euxo pipefail
 source /root/install.conf
 
 pacman -S --noconfirm \
