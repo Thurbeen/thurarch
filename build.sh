@@ -90,7 +90,7 @@ if [[ -n "${WIFI_SSID}" ]]; then
 fi
 
 # Write the complete install.conf for the ISO (secrets + overrides)
-cat > "${CONF_WORK}" <<EOF
+cat >"${CONF_WORK}" <<EOF
 TARGET_DISK="${TARGET_DISK}"
 HOSTNAME="${HOSTNAME}"
 USERNAME="${USERNAME}"
