@@ -88,7 +88,7 @@ pacstrap -K /mnt \
 
 # Create vconsole.conf before installing the kernel — mkinitcpio's
 # sd-vconsole hook requires this file to exist.
-echo "KEYMAP=${KEYMAP}" > /mnt/etc/vconsole.conf
+echo "KEYMAP=${KEYMAP}" >/mnt/etc/vconsole.conf
 
 # Now install the kernel (triggers mkinitcpio)
 pacstrap /mnt linux linux-headers
