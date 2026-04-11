@@ -8,7 +8,7 @@ pacman -S --noconfirm \
   kscreen systemsettings powerdevil polkit-kde-agent \
   xdg-desktop-portal xdg-desktop-portal-kde plasma-integration kde-gtk-config \
   xorg-xwayland \
-  dolphin firefox bitwarden ghostty zed \
+  dolphin firefox bitwarden ghostty zed ibus \
   ttf-jetbrains-mono noto-fonts noto-fonts-emoji ttf-liberation \
   pipewire pipewire-pulse pipewire-alsa wireplumber plasma-pa
 
@@ -52,6 +52,12 @@ cp /etc/skel/.config/kdeglobals /etc/skel/.config/kdedefaults/kdeglobals
 cat >/etc/skel/.config/plasmarc <<'EOF'
 [Theme]
 name=thurarch-llama
+EOF
+
+# --- IBus input method for Wayland (fixes dead keys / compose in GTK4 apps) ---
+cat >/etc/skel/.config/kwinrc <<'EOF'
+[Wayland]
+InputMethod[$e]=/usr/share/applications/org.freedesktop.IBus.Panel.Wayland.Gtk3.desktop
 EOF
 
 # --- Wallpaper (applied on first login via plasma-apply-wallpaperimage) ---
