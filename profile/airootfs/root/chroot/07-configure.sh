@@ -4,8 +4,8 @@ source /root/install.conf
 source /root/chroot/detect-hardware.sh
 
 # Hostname
-echo "${HOSTNAME}" > /etc/hostname
-cat > /etc/hosts <<EOF
+echo "${HOSTNAME}" >/etc/hostname
+cat >/etc/hosts <<EOF
 127.0.0.1   localhost
 ::1         localhost
 127.0.1.1   ${HOSTNAME}.localdomain ${HOSTNAME}
@@ -18,21 +18,21 @@ hwclock --systohc
 # Locale
 sed -i "s/^#${LOCALE}/${LOCALE}/" /etc/locale.gen
 locale-gen
-echo "LANG=${LOCALE}" > /etc/locale.conf
+echo "LANG=${LOCALE}" >/etc/locale.conf
 
 # Keymap
-echo "KEYMAP=${KEYMAP}" > /etc/vconsole.conf
+echo "KEYMAP=${KEYMAP}" >/etc/vconsole.conf
 
 # X11 keyboard layout (US International AltGr)
 localectl set-x11-keymap us "" altgr-intl
 
 # mkinitcpio — early KMS for iGPU (hybrid only), remove kms hook for NVIDIA
 if [[ "$GPU_MODE" == "hybrid" && "$CPU_VENDOR" == "amd" ]]; then
-    sed -i 's/^MODULES=.*/MODULES=(amdgpu)/' /etc/mkinitcpio.conf
+  sed -i 's/^MODULES=.*/MODULES=(amdgpu)/' /etc/mkinitcpio.conf
 elif [[ "$GPU_MODE" == "hybrid" && "$CPU_VENDOR" == "intel" ]]; then
-    sed -i 's/^MODULES=.*/MODULES=(i915)/' /etc/mkinitcpio.conf
+  sed -i 's/^MODULES=.*/MODULES=(i915)/' /etc/mkinitcpio.conf
 else
-    sed -i 's/^MODULES=.*/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
+  sed -i 's/^MODULES=.*/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
 fi
 sed -i 's/ kms//' /etc/mkinitcpio.conf
 mkinitcpio -P
@@ -40,14 +40,14 @@ mkinitcpio -P
 # systemd-boot
 bootctl --esp-path=/boot install
 
-cat > /boot/loader/loader.conf <<EOF
+cat >/boot/loader/loader.conf <<EOF
 default arch.conf
 timeout 3
 console-mode max
 editor no
 EOF
 
-cat > /boot/loader/entries/arch.conf <<EOF
+cat >/boot/loader/entries/arch.conf <<EOF
 title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /${UCODE_PKG}.img

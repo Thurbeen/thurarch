@@ -3,18 +3,18 @@ set -euo pipefail
 source /root/install.conf
 
 pacman -S --noconfirm \
-    plasma-desktop plasma-workspace plasma-systemmonitor kwin breeze breeze-gtk \
-    plasma-nm bluedevil bluez bluez-utils sddm sddm-kcm kwallet-pam \
-    kscreen systemsettings powerdevil polkit-kde-agent \
-    xdg-desktop-portal xdg-desktop-portal-kde plasma-integration kde-gtk-config \
-    xorg-xwayland \
-    dolphin firefox bitwarden ghostty zed \
-    ttf-jetbrains-mono noto-fonts noto-fonts-emoji ttf-liberation \
-    pipewire pipewire-pulse pipewire-alsa wireplumber plasma-pa
+  plasma-desktop plasma-workspace plasma-systemmonitor kwin breeze breeze-gtk \
+  plasma-nm bluedevil bluez bluez-utils sddm sddm-kcm kwallet-pam \
+  kscreen systemsettings powerdevil polkit-kde-agent \
+  xdg-desktop-portal xdg-desktop-portal-kde plasma-integration kde-gtk-config \
+  xorg-xwayland \
+  dolphin firefox bitwarden ghostty zed \
+  ttf-jetbrains-mono noto-fonts noto-fonts-emoji ttf-liberation \
+  pipewire pipewire-pulse pipewire-alsa wireplumber plasma-pa
 
 # --- Install Bitwarden extension and pin to Firefox toolbar ---
 mkdir -p /usr/lib/firefox/distribution
-cat > /usr/lib/firefox/distribution/policies.json <<'EOF'
+cat >/usr/lib/firefox/distribution/policies.json <<'EOF'
 {
   "policies": {
     "ExtensionSettings": {
@@ -35,7 +35,7 @@ EOF
 # --- Thurarch Llama: global theme & color scheme ---
 mkdir -p /etc/skel/.config/kdedefaults
 
-cat > /etc/skel/.config/kdeglobals <<'EOF'
+cat >/etc/skel/.config/kdeglobals <<'EOF'
 [General]
 ColorScheme=ThurarchLlama
 
@@ -49,14 +49,14 @@ EOF
 cp /etc/skel/.config/kdeglobals /etc/skel/.config/kdedefaults/kdeglobals
 
 # --- Thurarch Llama: Plasma shell theme (panels, widgets) ---
-cat > /etc/skel/.config/plasmarc <<'EOF'
+cat >/etc/skel/.config/plasmarc <<'EOF'
 [Theme]
 name=thurarch-llama
 EOF
 
 # --- Wallpaper (applied on first login via plasma-apply-wallpaperimage) ---
 mkdir -p /etc/skel/.config/autostart
-cat > /etc/skel/.config/autostart/set-wallpaper.desktop <<'EOF'
+cat >/etc/skel/.config/autostart/set-wallpaper.desktop <<'EOF'
 [Desktop Entry]
 Type=Application
 Name=Set Thurarch Wallpaper
@@ -68,7 +68,7 @@ EOF
 mkdir -p /etc/skel/.config/ghostty/themes
 cp /root/themes/ThurarchLlama.ghostty /etc/skel/.config/ghostty/themes/ThurarchLlama
 cp /root/themes/ghostty-tabs.css /etc/skel/.config/ghostty/ghostty-tabs.css
-cat > /etc/skel/.config/ghostty/config <<'EOF'
+cat >/etc/skel/.config/ghostty/config <<'EOF'
 theme = ThurarchLlama
 gtk-custom-css = ghostty-tabs.css
 EOF
@@ -76,7 +76,7 @@ EOF
 # --- Zed theme & settings ---
 mkdir -p /etc/skel/.config/zed/themes
 cp /root/themes/ThurarchLlama.json /etc/skel/.config/zed/themes/ThurarchLlama.json
-cat > /etc/skel/.config/zed/settings.json <<'EOF'
+cat >/etc/skel/.config/zed/settings.json <<'EOF'
 {
   "theme": {
     "mode": "dark",
@@ -86,7 +86,7 @@ cat > /etc/skel/.config/zed/settings.json <<'EOF'
 EOF
 
 # --- Set Zed as default text editor via MIME types ---
-cat > /etc/skel/.config/mimeapps.list <<'EOF'
+cat >/etc/skel/.config/mimeapps.list <<'EOF'
 [Default Applications]
 text/plain=dev.zed.Zed.desktop
 text/x-c=dev.zed.Zed.desktop
@@ -106,13 +106,13 @@ application/toml=dev.zed.Zed.desktop
 EOF
 
 # --- KDE shortcut: Meta+Up to maximize window ---
-cat > /etc/skel/.config/kglobalshortcutsrc <<'EOF'
+cat >/etc/skel/.config/kglobalshortcutsrc <<'EOF'
 [kwin]
 Window Maximize=Meta+Up\t,Meta+PgUp,Maximize Window
 EOF
 
 # --- Git config ---
-cat > /etc/skel/.gitconfig <<'EOF'
+cat >/etc/skel/.gitconfig <<'EOF'
 [user]
 	email = magicletur@protonmail.com
 	name = letur
@@ -133,12 +133,12 @@ chown "${USERNAME}:${USERNAME}" "/home/${USERNAME}/.gitconfig"
 
 # --- SDDM: use Breeze theme with Thurarch Llama wallpaper ---
 mkdir -p /etc/sddm.conf.d
-cat > /etc/sddm.conf.d/theme.conf <<'EOF'
+cat >/etc/sddm.conf.d/theme.conf <<'EOF'
 [Theme]
 Current=breeze
 EOF
 
-cat > /usr/share/sddm/themes/breeze/theme.conf.user <<'EOF'
+cat >/usr/share/sddm/themes/breeze/theme.conf.user <<'EOF'
 [General]
 background=thurarch-llama-wallpaper.png
 type=image
@@ -148,7 +148,7 @@ systemctl enable sddm
 systemctl enable bluetooth
 
 # --- KWallet PAM auto-unlock ---
-cat > /etc/pam.d/sddm <<'EOF'
+cat >/etc/pam.d/sddm <<'EOF'
 auth       include    system-login
 auth       optional   pam_kwallet5.so
 

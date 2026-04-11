@@ -20,8 +20,8 @@ PART1="${DISK}p1"
 PART2="${DISK}p2"
 
 if ! lsblk "${DISK}" &>/dev/null; then
-    echo "Error: target disk '${DISK}' not found."
-    exit 1
+  echo "Error: target disk '${DISK}' not found."
+  exit 1
 fi
 
 echo "[1/12] Partitioning ${DISK}..."
@@ -31,7 +31,7 @@ echo "[1/12] Partitioning ${DISK}..."
 # -------------------------------------------------------------------
 sgdisk --zap-all "${DISK}"
 sgdisk -n 1:0:+1G -t 1:ef00 -c 1:EFI "${DISK}"
-sgdisk -n 2:0:0   -t 2:8300 -c 2:ROOTFS "${DISK}"
+sgdisk -n 2:0:0 -t 2:8300 -c 2:ROOTFS "${DISK}"
 partprobe "${DISK}"
 udevadm settle --timeout=10
 
@@ -78,15 +78,15 @@ swapon /mnt/swap/swapfile
 echo "[5/12] Installing base system (pacstrap)..."
 # shellcheck disable=SC2046  # Intentionally unquoted: expands to zero args when false
 pacstrap -K /mnt \
-    base base-devel linux linux-headers linux-firmware \
-    btrfs-progs "${UCODE_PKG}" networkmanager vim git zsh \
-    power-profiles-daemon openssh $($IS_ASUS && echo "acpi_call")
+  base base-devel linux linux-headers linux-firmware \
+  btrfs-progs "${UCODE_PKG}" networkmanager vim git zsh \
+  power-profiles-daemon openssh $($IS_ASUS && echo "acpi_call")
 
 # -------------------------------------------------------------------
 # 6. Generate fstab
 # -------------------------------------------------------------------
 echo "[6/12] Generating fstab..."
-genfstab -Lp /mnt >> /mnt/etc/fstab
+genfstab -Lp /mnt >>/mnt/etc/fstab
 
 # Copy chroot scripts, config, and themes into the new system
 cp -r /root/chroot /mnt/root/chroot
@@ -134,9 +134,9 @@ arch-chroot /mnt /bin/bash /root/chroot/11-snapper.sh
 # 11b. WiFi configuration on installed system
 # -------------------------------------------------------------------
 if [[ -n "${WIFI_SSID}" ]]; then
-    echo "[11b/12] Configuring WiFi on installed system..."
-    mkdir -p /mnt/etc/NetworkManager/system-connections
-    cat > "/mnt/etc/NetworkManager/system-connections/${WIFI_SSID}.nmconnection" <<EOF
+  echo "[11b/12] Configuring WiFi on installed system..."
+  mkdir -p /mnt/etc/NetworkManager/system-connections
+  cat >"/mnt/etc/NetworkManager/system-connections/${WIFI_SSID}.nmconnection" <<EOF
 [connection]
 id=${WIFI_SSID}
 type=wifi
@@ -154,7 +154,7 @@ method=auto
 [ipv6]
 method=auto
 EOF
-    chmod 600 "/mnt/etc/NetworkManager/system-connections/${WIFI_SSID}.nmconnection"
+  chmod 600 "/mnt/etc/NetworkManager/system-connections/${WIFI_SSID}.nmconnection"
 fi
 
 # -------------------------------------------------------------------
@@ -174,14 +174,14 @@ echo "=========================================="
 echo "  Installation complete!"
 
 if [[ "$(systemd-detect-virt)" == "kvm" ]]; then
-    echo "  VM detected — shutting down in 5 seconds..."
-    echo "=========================================="
-    sleep 5
-    systemctl poweroff
+  echo "  VM detected — shutting down in 5 seconds..."
+  echo "=========================================="
+  sleep 5
+  systemctl poweroff
 else
-    echo "  Rebooting in 10 seconds..."
-    echo "  Remove the USB drive!"
-    echo "=========================================="
-    sleep 10
-    systemctl reboot
+  echo "  Rebooting in 10 seconds..."
+  echo "  Remove the USB drive!"
+  echo "=========================================="
+  sleep 10
+  systemctl reboot
 fi
