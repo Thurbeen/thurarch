@@ -45,7 +45,7 @@ QEMU_ARGS=(
 )
 
 if [[ "${MODE}" == "install" ]]; then
-    ISO=$(ls -t "${SCRIPT_DIR}/out/"*.iso 2>/dev/null | head -1)
+    ISO=$(find "${SCRIPT_DIR}/out/" -maxdepth 1 -name '*.iso' -printf '%T@ %p\n' 2>/dev/null | sort -rn | head -1 | cut -d' ' -f2-)
     if [[ -z "${ISO}" ]]; then
         echo "Error: no ISO found in out/. Run ./build.sh first."
         exit 1
