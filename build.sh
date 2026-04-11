@@ -99,10 +99,12 @@ LOCALE="${LOCALE}"
 KEYMAP="${KEYMAP}"
 SWAP_SIZE="${SWAP_SIZE}"
 EOF
-printf "USER_PASSWORD='%s'\n" "${USER_PASSWORD//\'/\'\\\'\'}" >> "${CONF_WORK}"
-printf "ROOT_PASSWORD='%s'\n" "${ROOT_PASSWORD//\'/\'\\\'\'}" >> "${CONF_WORK}"
-printf "WIFI_SSID='%s'\n" "${WIFI_SSID//\'/\'\\\'\'}" >> "${CONF_WORK}"
-printf "WIFI_PASSWORD='%s'\n" "${WIFI_PASSWORD//\'/\'\\\'\'}" >> "${CONF_WORK}"
+{
+  printf "USER_PASSWORD='%s'\n" "${USER_PASSWORD//\'/\'\\\'\'}"
+  printf "ROOT_PASSWORD='%s'\n" "${ROOT_PASSWORD//\'/\'\\\'\'}"
+  printf "WIFI_SSID='%s'\n" "${WIFI_SSID//\'/\'\\\'\'}"
+  printf "WIFI_PASSWORD='%s'\n" "${WIFI_PASSWORD//\'/\'\\\'\'}"
+} >>"${CONF_WORK}"
 
 # -------------------------------------------------------------------
 # Generate iwd WiFi profile if WIFI_SSID is set
