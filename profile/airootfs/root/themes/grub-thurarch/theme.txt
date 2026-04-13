@@ -1,0 +1,48 @@
+desktop-color: "#0c121c"
+title-text: ""
+message-color: "#f0f0f0"
+message-bg-color: "#0c121c"
+terminal-font: "JetBrains Mono Regular 14"
+
++ label {
+    top = 12%
+    left = 0
+    width = 100%
+    align = "center"
+    color = "#00b4be"
+    font = "JetBrains Mono Regular 16"
+    text = "THURARCH"
+}
+
++ boot_menu {
+    left = 25%
+    top = 30%
+    width = 50%
+    height = 50%
+    item_font = "JetBrains Mono Regular 16"
+    item_color = "#f0f0f0"
+    selected_item_color = "#00b4be"
+    item_height = 36
+    item_padding = 8
+    item_spacing = 4
+}
+
++ label {
+    top = 88%
+    left = 0
+    width = 100%
+    align = "center"
+    color = "#f0f0f0"
+    font = "JetBrains Mono Regular 12"
+    text = "↑/↓: select   ⏎: boot   e: edit   c: console"
+}
+
++ label {
+    top = 94%
+    left = 0
+    width = 100%
+    align = "center"
+    color = "#00b4be"
+    font = "JetBrains Mono Regular 12"
+    text = "Thurarch — Arch Linux"
+}

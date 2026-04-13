@@ -59,7 +59,7 @@ The "Thurarch Llama" theme is applied across KDE (color scheme + desktop theme +
 ## Key Technical Details
 
 - **Filesystem**: btrfs with zstd compression, SSD-optimized mount options, async discard
-- **Boot**: systemd-boot (not GRUB)
+- **Boot**: GRUB (UEFI) with custom Thurarch Llama theme; `grub-btrfs` exposes snapper snapshots as boot entries
 - **GPU**: NVIDIA open-dkms; nvidia-prime only installed for hybrid GPU setups (auto-detected)
 - **QEMU test VM**: KVM with virtio-vga-gl for GPU acceleration (needed for Ghostty rendering), OVMF EFI firmware, NVMe virtual disk
 - **WiFi**: Optional iwd profiles generated at build time by `build.sh`
