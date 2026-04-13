@@ -37,23 +37,36 @@ fi
 sed -i 's/ kms//' /etc/mkinitcpio.conf
 # mkinitcpio -P deferred to 08-nvidia.sh (after NVIDIA drivers are installed)
 
-# systemd-boot
-bootctl --esp-path=/boot install
+# GRUB (UEFI) with Thurarch Llama theme
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Thurarch --recheck
+# Also install to EFI fallback path so firmwares without persistent NVRAM
+# (e.g. QEMU OVMF without separate VARS) and post-BIOS-reset hardware still boot.
+grub-install --target=x86_64-efi --efi-directory=/boot --removable --recheck
 
-cat >/boot/loader/loader.conf <<EOF
-default arch.conf
-timeout 3
-console-mode max
-editor no
-EOF
+# Install Thurarch GRUB theme (solid #0c121c background, teal #00b4be accent,
+# JetBrains Mono typography). Fonts are built from ttf-jetbrains-mono.
+mkdir -p /boot/grub/themes/thurarch
+cp -r /root/themes/grub-thurarch/. /boot/grub/themes/thurarch/
 
-cat >/boot/loader/entries/arch.conf <<EOF
-title   Arch Linux
-linux   /vmlinuz-linux
-initrd  /${UCODE_PKG}.img
-initrd  /initramfs-linux.img
-options root=UUID=${ROOT_UUID} rootflags=subvol=@ rw quiet loglevel=3
-EOF
+JBM=/usr/share/fonts/TTF/JetBrainsMono-Regular.ttf
+[[ -f $JBM ]] || JBM=$(find /usr/share/fonts -iname 'JetBrainsMono-Regular.ttf' | head -1)
+mkdir -p /boot/grub/fonts
+for size in 12 14 16; do
+  grub-mkfont -s "$size" -o "/boot/grub/fonts/jetbrainsmono-${size}.pf2" "$JBM"
+done
+
+# /etc/default/grub — kernel cmdline + theme + sane defaults
+sed -i \
+  -e "s|^GRUB_CMDLINE_LINUX_DEFAULT=.*|GRUB_CMDLINE_LINUX_DEFAULT=\"rootflags=subvol=@ rw quiet loglevel=3\"|" \
+  -e "s|^GRUB_CMDLINE_LINUX=.*|GRUB_CMDLINE_LINUX=\"root=UUID=${ROOT_UUID}\"|" \
+  -e "s|^#\?GRUB_TIMEOUT=.*|GRUB_TIMEOUT=3|" \
+  -e "s|^#\?GRUB_GFXMODE=.*|GRUB_GFXMODE=auto|" \
+  -e "s|^#\?GRUB_GFXPAYLOAD_LINUX=.*|GRUB_GFXPAYLOAD_LINUX=keep|" \
+  -e "s|^#\?GRUB_THEME=.*|GRUB_THEME=\"/boot/grub/themes/thurarch/theme.txt\"|" \
+  -e "s|^#\?GRUB_DISABLE_OS_PROBER=.*|GRUB_DISABLE_OS_PROBER=false|" \
+  /etc/default/grub
+
+grub-mkconfig -o /boot/grub/grub.cfg
 
 # Root password
 echo "root:${ROOT_PASSWORD}" | chpasswd

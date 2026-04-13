@@ -35,3 +35,6 @@ snapper --no-dbus -c root set-config "TIMELINE_LIMIT_YEARLY=0"
 # Enable snapper timers
 systemctl enable snapper-timeline.timer
 systemctl enable snapper-cleanup.timer
+
+# grub-btrfs: regenerate GRUB entries when snapshots change
+systemctl enable grub-btrfsd.service

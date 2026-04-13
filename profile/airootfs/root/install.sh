@@ -84,6 +84,7 @@ echo "[5/12] Installing base system (pacstrap)..."
 pacstrap -K /mnt \
   base base-devel linux-firmware \
   btrfs-progs "${UCODE_PKG}" networkmanager vim git zsh \
+  grub efibootmgr grub-btrfs ttf-jetbrains-mono freetype2 \
   power-profiles-daemon openssh $($IS_ASUS && echo "acpi_call")
 
 # Create vconsole.conf before installing the kernel — mkinitcpio's
