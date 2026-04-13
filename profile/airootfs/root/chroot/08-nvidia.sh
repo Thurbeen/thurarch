@@ -28,10 +28,19 @@ pacman -S --noconfirm \
 
 # NVIDIA modprobe options
 mkdir -p /etc/modprobe.d
-cat >/etc/modprobe.d/nvidia.conf <<EOF
-options nvidia_drm modeset=1 fbdev=1
-options nvidia NVreg_DynamicPowerManagement=$([[ "$GPU_MODE" == "hybrid" ]] && echo "0x02" || echo "0x00")
+# fbdev=1 is omitted on hybrid: amdgpu/i915 owns the panel, and forcing nvidia-fbdev
+# races the KMS handoff when the dGPU is runtime-suspended (black screen on battery).
+if [[ "$GPU_MODE" == "hybrid" ]]; then
+  cat >/etc/modprobe.d/nvidia.conf <<EOF
+options nvidia_drm modeset=1
+options nvidia NVreg_DynamicPowerManagement=0x02
 EOF
+else
+  cat >/etc/modprobe.d/nvidia.conf <<EOF
+options nvidia_drm modeset=1 fbdev=1
+options nvidia NVreg_DynamicPowerManagement=0x00
+EOF
+fi
 
 # Rebuild initramfs with NVIDIA
 mkinitcpio -P
