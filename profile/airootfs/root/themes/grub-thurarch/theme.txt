@@ -1,48 +1,72 @@
+desktop-image: "background.png"
 desktop-color: "#0c121c"
 title-text: ""
 message-color: "#f0f0f0"
 message-bg-color: "#0c121c"
 terminal-font: "JetBrains Mono Regular 14"
+terminal-box: "menu_*.png"
 
 + label {
-    top = 12%
+    top = 10%
     left = 0
     width = 100%
     align = "center"
     color = "#00b4be"
-    font = "JetBrains Mono Regular 16"
+    font = "JetBrains Mono Regular 24"
     text = "THURARCH"
 }
 
++ label {
+    top = 16%
+    left = 0
+    width = 100%
+    align = "center"
+    color = "#919ba5"
+    font = "JetBrains Mono Regular 12"
+    text = "Arch Linux — Thurarch Llama"
+}
+
 + boot_menu {
-    left = 25%
-    top = 30%
-    width = 50%
-    height = 50%
+    left = 20%
+    top = 25%
+    width = 60%
+    height = 55%
     item_font = "JetBrains Mono Regular 16"
     item_color = "#f0f0f0"
-    selected_item_color = "#00b4be"
-    item_height = 36
-    item_padding = 8
-    item_spacing = 4
+    selected_item_color = "#ffffff"
+    item_height = 40
+    item_padding = 10
+    item_spacing = 6
+    item_icon_space = 12
+    icon_width = 32
+    icon_height = 32
+    menu_pixmap_style = "menu_*.png"
+    selected_item_pixmap_style = "select_*.png"
+    scrollbar = true
+    scrollbar_width = 4
+    scrollbar_thumb = "select_*.png"
+}
+
++ progress_bar {
+    id = "__timeout__"
+    left = 30%
+    top = 84%
+    width = 40%
+    height = 10
+    show_text = true
+    font = "JetBrains Mono Regular 12"
+    text_color = "#f0f0f0"
+    text = "Booting in %d s"
+    bar_style = "progress_bg.png"
+    highlight_style = "progress_highlight.png"
 }
 
 + label {
-    top = 88%
+    top = 92%
     left = 0
     width = 100%
     align = "center"
-    color = "#f0f0f0"
+    color = "#919ba5"
     font = "JetBrains Mono Regular 12"
-    text = "↑/↓: select   ⏎: boot   e: edit   c: console"
-}
-
-+ label {
-    top = 94%
-    left = 0
-    width = 100%
-    align = "center"
-    color = "#00b4be"
-    font = "JetBrains Mono Regular 12"
-    text = "Thurarch — Arch Linux"
+    text = "↑/↓ select   ⏎ boot   e edit   c console"
 }

@@ -51,7 +51,7 @@ cp -r /root/themes/grub-thurarch/. /boot/grub/themes/thurarch/
 JBM=/usr/share/fonts/TTF/JetBrainsMono-Regular.ttf
 [[ -f $JBM ]] || JBM=$(find /usr/share/fonts -iname 'JetBrainsMono-Regular.ttf' | head -1)
 mkdir -p /boot/grub/fonts
-for size in 12 14 16; do
+for size in 12 14 16 24; do
   grub-mkfont -s "$size" -o "/boot/grub/fonts/jetbrainsmono-${size}.pf2" "$JBM"
 done
 
